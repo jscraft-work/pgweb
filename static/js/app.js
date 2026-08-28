@@ -1419,8 +1419,8 @@ function closeDatabaseSearch(returnFocus) {
   if (!wasOpen) return;
 
   container.removeClass("is-open is-loading");
+  $("#sidebar").removeClass("database-picker-open");
   $("#database_selector").attr("aria-expanded", "false");
-  $("#database_search").prop("disabled", false).attr("placeholder", "Search databases");
 
   if (returnFocus) {
     $("#database_selector").focus();
@@ -1429,26 +1429,28 @@ function closeDatabaseSearch(returnFocus) {
 
 function toggleDatabaseSearch() {
   var container = $(".current-database");
+  var isOpen;
 
   container.toggleClass("is-open");
-  $("#database_selector").attr("aria-expanded", container.hasClass("is-open") ? "true" : "false");
+  isOpen = container.hasClass("is-open");
+  $("#sidebar").toggleClass("database-picker-open", isOpen);
+  $("#database_selector").attr("aria-expanded", isOpen ? "true" : "false");
 }
 
 function enableDatabaseSearch(data) {
-  var input = $("#database_search");
+  var current = $("#current_database").text();
+  var options = $("#database_options").empty();
 
-  input.typeahead("destroy");
-
-  input.typeahead({
-    source: data,
-    minLength: 0,
-    items: "all",
-    autoSelect: false,
-    fitToElement: true
+  $.each(data, function(_, database) {
+    var button = $("<button type='button' role='menuitem'></button>").text(database).data("database", database);
+    if (database == current) {
+      button.addClass("is-current").attr("aria-current", "true");
+    }
+    $("<li></li>").append(button).appendTo(options);
   });
 
-  input.val("");
-  input.typeahead("lookup").focus();
+  $("#database_picker_status").toggle(data.length == 0).text("No databases available");
+  options.find("button").first().focus();
 }
 
 function bindInputResizeEvents() {
@@ -1746,7 +1748,6 @@ $(document).ready(function() {
 
   $("#database_selector").on("click", function(e) {
     var container = $(".current-database");
-    var input = $("#database_search");
     var request;
 
     e.stopPropagation();
@@ -1759,13 +1760,18 @@ $(document).ready(function() {
     request = ++databaseSearchRequest;
     toggleDatabaseSearch();
     container.addClass("is-loading");
-    input.val("").prop("disabled", true).attr("placeholder", "Loading databases...").focus();
+    $("#database_options").empty();
+    $("#database_picker_status").text("Loading databases...").show();
 
     apiCall("get", "/databases", {}, function(resp) {
       if (request != databaseSearchRequest || !container.hasClass("is-open")) return;
 
       container.removeClass("is-loading");
-      input.prop("disabled", false).attr("placeholder", "Search databases");
+      if (resp.error) {
+        closeDatabaseSearch(false);
+        showErrorBanner(resp.error);
+        return;
+      }
       enableDatabaseSearch(resp);
     });
   });
@@ -1785,17 +1791,24 @@ $(document).ready(function() {
     }
   });
 
-  $("#database_search").change(function(e) {
-    var current = $("#database_search").typeahead("getActive");
-    if (current && current == $("#database_search").val()) {
-      apiCall("post", "/switchdb", { db: current }, function(resp) {
-        if (resp.error) {
-          alert(resp.error);
-          return;
-        };
-        window.location.reload();
-      });
-    };
+  $("#database_options").on("click", "button", function(e) {
+    var database = $(this).data("database");
+
+    e.stopPropagation();
+    if (database == $("#current_database").text()) {
+      closeDatabaseSearch(true);
+      return;
+    }
+
+    $("#database_options button").prop("disabled", true);
+    apiCall("post", "/switchdb", { db: database }, function(resp) {
+      if (resp.error) {
+        $("#database_options button").prop("disabled", false);
+        showErrorBanner(resp.error);
+        return;
+      }
+      window.location.reload();
+    });
   });
 
   $("#edit_connection").on("click", function() {

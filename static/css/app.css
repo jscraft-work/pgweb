@@ -154,45 +154,65 @@
 #sidebar .current-database .database-picker {
   position: absolute;
   display: none;
-  top: 44px;
-  left: 8px;
-  width: 234px;
-  padding: 8px;
+  top: 50px;
+  left: 0;
+  width: 250px;
+  height: 224px;
+  padding: 6px;
   line-height: normal;
   background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid #ddd;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 #sidebar .current-database.is-open .database-picker {
   display: block;
 }
 
-#sidebar .current-database .database-picker > i.fa-search {
-  position: absolute;
-  top: 16px;
-  left: 17px;
+#sidebar .database-picker-status {
+  padding: 8px;
   color: #888;
+  font-size: 12px;
+  font-weight: normal;
 }
 
-#sidebar .current-database input.typeahead {
+#sidebar .database-options {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#sidebar .database-options button {
   display: block;
   width: 100%;
-  height: 30px;
-  padding: 4px 8px 4px 28px;
+  padding: 7px 9px;
   color: #333;
-  font-weight: normal;
-  background: #fff;
-  border: 1px solid #ccc;
+  background: transparent;
+  border: 0;
   border-radius: 3px;
-  box-sizing: border-box;
+  font-size: 13px;
+  font-weight: normal;
+  text-align: left;
+  cursor: pointer;
 }
 
-#sidebar .current-database input.typeahead:focus {
-  border-color: #79589f;
-  box-shadow: 0 0 0 2px rgba(121, 88, 159, 0.18);
+#sidebar .database-options button:hover,
+#sidebar .database-options button:focus {
+  color: #fff;
+  background: #79589f;
   outline: none;
+}
+
+#sidebar .database-options button.is-current {
+  color: #79589f;
+  background: #f0ebf5;
+  font-weight: bold;
+}
+
+#sidebar .database-options button:disabled {
+  cursor: wait;
+  opacity: 0.6;
 }
 
 #sidebar .current-database span.refresh {
@@ -208,19 +228,6 @@
   display: inline-block;
 }
 
-#sidebar ul.typeahead {
-  position: absolute;
-  margin: 4px 0 0;
-  overflow-y: auto;
-  max-height: 300px;
-  z-index: 999;
-}
-
-#sidebar ul.typeahead a {
-  font-size: 13px;
-  padding: 3px 10px;
-}
-
 #sidebar .objects-search {
   position: fixed;
   top: 50px;
@@ -228,6 +235,10 @@
   width: 250px;
   height: 30px;
   overflow: hidden;
+}
+
+#sidebar.database-picker-open .objects-search {
+  top: 274px;
 }
 
 #sidebar .objects-search .wrap {
@@ -279,6 +290,10 @@
   left: 0px;
   bottom: 130px;
   overflow: auto;
+}
+
+#sidebar.database-picker-open div.tables-list {
+  top: 304px;
 }
 
 #sidebar div.tables-list .wrap {
