@@ -132,6 +132,9 @@ function showErrorBanner(text) {
   $("#error_banner").text(text).show();
 }
 
+// Keep notices visible without blocking the user with a browser dialog.
+window.alert = showErrorBanner;
+
 function buildSchemaSection(name, objects) {
   var section = "";
 
@@ -1909,4 +1912,3 @@ $(document).ready(function() {
     });
   });
 });
-
