@@ -1408,9 +1408,30 @@ function bindContextMenus() {
   });
 }
 
+var databaseSearchRequest = 0;
+
+function closeDatabaseSearch(returnFocus) {
+  var container = $(".current-database");
+  var wasOpen = container.hasClass("is-open");
+
+  databaseSearchRequest += 1;
+
+  if (!wasOpen) return;
+
+  container.removeClass("is-open is-loading");
+  $("#database_selector").attr("aria-expanded", "false");
+  $("#database_search").prop("disabled", false).attr("placeholder", "Search databases");
+
+  if (returnFocus) {
+    $("#database_selector").focus();
+  }
+}
+
 function toggleDatabaseSearch() {
-  $("#current_database").toggle();
-  $("#database_search").toggle();
+  var container = $(".current-database");
+
+  container.toggleClass("is-open");
+  $("#database_selector").attr("aria-expanded", container.hasClass("is-open") ? "true" : "false");
 }
 
 function enableDatabaseSearch(data) {
@@ -1426,12 +1447,8 @@ function enableDatabaseSearch(data) {
     fitToElement: true
   });
 
+  input.val("");
   input.typeahead("lookup").focus();
-
-  input.on("focusout", function(e){
-    toggleDatabaseSearch();
-    input.off("focusout");
-  });
 }
 
 function bindInputResizeEvents() {
@@ -1727,11 +1744,45 @@ $(document).ready(function() {
     }
   });
 
-  $("#current_database").on("click", function(e) {
+  $("#database_selector").on("click", function(e) {
+    var container = $(".current-database");
+    var input = $("#database_search");
+    var request;
+
+    e.stopPropagation();
+
+    if (container.hasClass("is-open")) {
+      closeDatabaseSearch(false);
+      return;
+    }
+
+    request = ++databaseSearchRequest;
+    toggleDatabaseSearch();
+    container.addClass("is-loading");
+    input.val("").prop("disabled", true).attr("placeholder", "Loading databases...").focus();
+
     apiCall("get", "/databases", {}, function(resp) {
-      toggleDatabaseSearch();
+      if (request != databaseSearchRequest || !container.hasClass("is-open")) return;
+
+      container.removeClass("is-loading");
+      input.prop("disabled", false).attr("placeholder", "Search databases");
       enableDatabaseSearch(resp);
     });
+  });
+
+  $("#database_picker").on("click", function(e) {
+    e.stopPropagation();
+  });
+
+  $(document).on("click.database-picker", function() {
+    closeDatabaseSearch(false);
+  });
+
+  $(document).on("keydown.database-picker", function(e) {
+    if (e.keyCode == 27 && $(".current-database").hasClass("is-open")) {
+      e.preventDefault();
+      closeDatabaseSearch(true);
+    }
   });
 
   $("#database_search").change(function(e) {

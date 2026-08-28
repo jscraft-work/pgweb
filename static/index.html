@@ -42,8 +42,16 @@
     <div id="sidebar">
       <div class="current-database">
         <div class="wrap">
-          <i class="fa fa-database"></i> <span class="current-database-name" id="current_database"></span>
-          <input class="typeahead" id="database_search" type="text" placeholder="Search database" autocomplete="off" />
+          <button type="button" class="database-selector" id="database_selector" aria-expanded="false" aria-controls="database_picker" title="Switch database">
+            <i class="fa fa-database"></i>
+            <span class="database-selector-label">Database</span>
+            <span class="current-database-name" id="current_database"></span>
+            <i class="fa fa-chevron-down database-selector-chevron"></i>
+          </button>
+          <div class="database-picker" id="database_picker">
+            <i class="fa fa-search"></i>
+            <input class="typeahead" id="database_search" type="text" placeholder="Search databases" aria-label="Search databases" autocomplete="off" />
+          </div>
           <span class="refresh" id="refresh_tables" title="Refresh tables list"><i class="fa fa-refresh"></i></span>
         </div>
       </div>

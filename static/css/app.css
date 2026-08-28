@@ -93,48 +93,112 @@
   height: 50px;
 }
 
-#sidebar .current-database span.current-database-name {
-  margin-left: 30px;
-  display: inline-block;
-  width: 200px;
+#sidebar .current-database button.database-selector {
+  position: relative;
+  display: block;
+  width: 100%;
   height: 50px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  padding: 5px 38px 5px 32px;
+  color: #fff;
+  background: transparent;
+  border: 0;
+  text-align: left;
   cursor: pointer;
 }
 
-#sidebar .current-database i.fa-database {
+#sidebar .current-database button.database-selector:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+#sidebar .current-database button.database-selector:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.9);
+  outline-offset: -3px;
+}
+
+#sidebar .current-database .database-selector-label {
+  display: block;
+  font-size: 10px;
+  font-weight: normal;
+  line-height: 13px;
+  opacity: 0.75;
+  text-transform: uppercase;
+}
+
+#sidebar .current-database span.current-database-name {
+  display: block;
+  width: 100%;
+  line-height: 19px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#sidebar .current-database button.database-selector > i.fa-database {
   position: absolute;
   left: 8px;
   top: 18px;
 }
 
-#sidebar .current-database input.typeahead {
-  margin-left: 30px;
-  display: inline-block;
-  width: 200px;
-  height: 50px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+#sidebar .current-database .database-selector-chevron {
+  position: absolute;
+  top: 19px;
+  right: 10px;
+  font-size: 11px;
+  transition: transform 120ms ease;
+}
+
+#sidebar .current-database.is-open .database-selector-chevron {
+  transform: rotate(180deg);
+}
+
+#sidebar .current-database .database-picker {
+  position: absolute;
+  display: none;
+  top: 44px;
+  left: 8px;
+  width: 234px;
+  padding: 8px;
+  line-height: normal;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+#sidebar .current-database.is-open .database-picker {
+  display: block;
+}
+
+#sidebar .current-database .database-picker > i.fa-search {
+  position: absolute;
+  top: 16px;
+  left: 17px;
+  color: #888;
 }
 
 #sidebar .current-database input.typeahead {
-  display: none;
-  background: #79589f;
-  width: 200px;
-  height: 22px;
-  color: #fff;
+  display: block;
+  width: 100%;
+  height: 30px;
+  padding: 4px 8px 4px 28px;
+  color: #333;
   font-weight: normal;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  box-sizing: border-box;
+}
+
+#sidebar .current-database input.typeahead:focus {
+  border-color: #79589f;
+  box-shadow: 0 0 0 2px rgba(121, 88, 159, 0.18);
   outline: none;
-  border: 0px none;
 }
 
 #sidebar .current-database span.refresh {
   position: absolute;
   top: 0px;
-  right: 6px;
+  right: 28px;
   cursor: pointer;
   color: #fff;
   display: none;
@@ -144,13 +208,9 @@
   display: inline-block;
 }
 
-#sidebar .current-database input.typeahead::-webkit-input-placeholder {
-  color: #fff;
-}
-
 #sidebar ul.typeahead {
   position: absolute;
-  margin-left: 30px;
+  margin: 4px 0 0;
   overflow-y: auto;
   max-height: 300px;
   z-index: 999;
