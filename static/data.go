@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-//go:embed img/* js/* css/* fonts/*
+//go:embed img/* js/* css/* fonts/* brand/*
 //go:embed index.html
 var assets embed.FS
 
