@@ -133,10 +133,10 @@
   text-overflow: ellipsis;
 }
 
-#sidebar .current-database button.database-selector > i.fa-database {
+#sidebar .current-database button.database-selector > .brand-logo {
   position: absolute;
-  left: 8px;
-  top: 18px;
+  left: 5px;
+  top: 13px;
 }
 
 #sidebar .current-database .database-selector-chevron {
